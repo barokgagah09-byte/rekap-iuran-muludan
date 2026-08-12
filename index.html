@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rekap Iuran Buludan</title>
+<style>
+:root{--g:#0f6b4f;--g2:#0b5a43;--gold:#c49a43;--bg:#f4f7f5;--line:#dfe7e2;--text:#17221d;--muted:#68756e;--red:#c83c32}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(135deg,var(--g2),var(--g));color:#fff;padding:17px;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:20px}header small{opacity:.8}
+nav{display:flex;gap:7px;overflow:auto;padding:9px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:69px;z-index:9}
+nav button,.btn{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:9px;font-weight:700;cursor:pointer}
+nav button.active,.btn.primary{background:var(--g);color:#fff;border-color:var(--g)}
+.btn.gold{background:var(--gold);color:#fff;border-color:var(--gold)}.btn.danger{color:var(--red)}
+main{max-width:1180px;margin:auto;padding:14px}.page{display:none}.page.active{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 3px 15px #17382a0a}
+.hero{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;border-radius:12px;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.stat small{display:block;color:var(--muted);font-weight:700}.stat b{display:block;margin-top:5px;font-size:19px;color:var(--g2)}
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}label{font-size:12px;font-weight:700;color:#46534d}input,select{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;background:#fff;color:var(--text)}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.scroll{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}th{background:#f4f8f5}
+td.name{text-align:left;font-weight:700}td.name input{min-width:190px;font-weight:700}
+.pay{min-width:125px}.pay input{margin:0}.date{font-size:10px;color:var(--muted);display:block;margin-top:3px}
+.status{font-weight:800}.ok{color:#087f52}.warn{color:#b87919}.red{color:var(--red)}
+.section{display:flex;justify-content:space-between;align-items:center;gap:8px}.section h2,.section h3{margin:0}
+.empty{text-align:center;color:var(--muted);padding:25px}.badge{font-size:10px;padding:4px 7px;border-radius:99px;background:#e9f7f0;color:#087f52;font-weight:800}
+.muted{color:var(--muted);font-size:12px}.dashboard-stats .stat{position:relative;min-height:92px}.stat-icon{position:absolute;right:12px;top:10px;width:28px;height:28px;border-radius:9px;background:#eaf5ef;color:var(--g);display:grid;place-items:center;font-weight:900}.dashboard-stats .stat b{font-size:20px;margin-top:8px}.overall-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.group-mini{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fbfdfc}.group-mini-head,.group-mini-foot{display:flex;justify-content:space-between;gap:8px;align-items:center}.group-mini-head span,.group-mini-foot{font-size:11px;color:var(--muted)}.group-mini strong{display:block;font-size:17px;color:var(--g2);margin-top:8px}.group-mini small{color:var(--muted)}.progress-wrap{display:flex;align-items:center;gap:7px;min-width:120px}.progress-wrap b{font-size:11px}.progress-bar{height:7px;background:#e7eee9;border-radius:99px;overflow:hidden;flex:1;margin-top:7px}.progress-bar span{display:block;height:100%;background:var(--g);border-radius:99px}.iuran-toolbar{background:linear-gradient(135deg,#ffffff,#f1f8f4)}@media(max-width:900px){.overall-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.overall-cards{grid-template-columns:1fr}.dashboard-stats .stat{min-height:85px}.iuran-toolbar .section{align-items:flex-start;flex-direction:column}}@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.form{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}main{padding:9px}}
+@media print{header,nav,.no-print{display:none!important}body{background:#fff}.page.active{display:block}main{padding:0}.card{border:0;box-shadow:none}}
+
+.hero-title{font-size:clamp(20px,5vw,30px);font-weight:850;line-height:1.12;max-width:560px;overflow-wrap:anywhere}
+.hero-info{margin-top:8px;line-height:1.45;opacity:.88;max-width:650px}.muted{color:var(--muted);font-size:12px}
+textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;font-family:inherit;resize:vertical}
+.report-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.report-info{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.report-info>div{border:1px solid var(--line);border-radius:10px;padding:10px}.report-info small{display:block;color:var(--muted);margin-bottom:4px}
+.report-stats{grid-template-columns:repeat(5,1fr)}.note-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fbfdfc}
+.note-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.note-card h3{margin:8px 0 5px}.note-card p{line-height:1.55}
+.note-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}.conclusion{background:#f0f7f3;border-left:4px solid var(--g);padding:13px;line-height:1.6;border-radius:8px}
+@media(max-width:900px){.report-head{align-items:flex-start;flex-direction:column}.report-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-info{grid-template-columns:1fr}.report-stats{grid-template-columns:1fr}.hero-title{font-size:21px}}
+</style>
+</head>
+<body>
+<header><h1 id="title">Haul & Maulid Sukamandi 2025</h1><small>Rekap Iuran Buludan</small></header>
+<nav>
+<button class="active" data-page="dashboard">⌂ Dashboard</button>
+<button data-page="iuran">👥 Iuran</button>
+<button data-page="kas">📒 Buku Kas</button>
+<button data-page="catatan">📝 Catatan</button>
+<button data-page="laporan">📊 Laporan</button>
+<button data-page="panitia">Panitia</button>
+<button data-page="pengaturan">⚙ Pengaturan</button>
+</nav>
+<main>
+<section id="dashboard" class="page active">
+<div class="card"><div class="hero"><div class="hero-title" id="dashTitle"></div><div class="hero-info" id="dashInfo"></div></div></div>
+<div class="grid dashboard-stats"><div class="stat"><span class="stat-icon">↗</span><small>Total Pemasukan</small><b id="totalIncome">Rp0</b></div><div class="stat"><span class="stat-icon">↘</span><small>Total Pengeluaran</small><b id="totalExpense">Rp0</b></div><div class="stat"><span class="stat-icon">◉</span><small>Saldo Kas</small><b id="balance">Rp0</b></div><div class="stat"><span class="stat-icon">✓</span><small>Progress Iuran</small><b id="progress">0%</b></div></div>
+<div class="card"><div class="section"><div><h3>Rekap Keseluruhan Iuran</h3><small class="muted">K1 sampai K4 dalam satu laporan</small></div><div class="actions no-print"><button class="btn" onclick="printAllGroups()">📄 PDF K1–K4</button><button class="btn primary" onclick="shareAllGroups()">📤 Bagikan K1–K4</button></div></div><div id="overallCards" class="overall-cards"></div><div class="scroll"><table><thead><tr><th>Kelompok</th><th>Target/Orang</th><th>Anggota</th><th>Target Kelompok</th><th>Total Masuk</th><th>Kekurangan</th><th>Progress</th></tr></thead><tbody id="summary"></tbody></table></div></div>
+</section>
+
+<section id="iuran" class="page">
+<div class="card iuran-toolbar no-print"><div class="section"><div><h2>Rekap Iuran Anggota</h2><small class="muted">Kelola anggota K1–K4 dan tiga kali pemasukan.</small></div><div class="actions"><button class="btn" onclick="printAllGroups()">📄 PDF Keseluruhan</button><button class="btn primary" onclick="shareAllGroups()">📤 Bagikan Keseluruhan</button></div></div></div>
+<div class="card no-print"><h2>Tambah Anggota</h2><div class="form"><label>Kelompok<select id="memberGroup"></select></label><label>Nama<input id="memberName" placeholder="Nama anggota"></label></div><div class="actions"><button class="btn primary" onclick="addMember()">+ Tambah Anggota</button></div><small>Setiap anggota memiliki 3 kali pemasukan. Tanggal otomatis muncul saat nominal diisi.</small></div>
+<div id="groups"></div>
+</section>
+
+<section id="kas" class="page">
+<div class="card no-print"><div class="section"><h2>Buku Kas</h2><button class="btn primary" onclick="window.print()">📄 PDF</button></div>
+<div class="grid" style="margin-top:10px"><div class="stat"><small>Pemasukan Iuran</small><b id="kasIuran">Rp0</b></div><div class="stat"><small>Pemasukan Lain</small><b id="kasOther">Rp0</b></div><div class="stat"><small>Pengeluaran</small><b id="kasOut">Rp0</b></div><div class="stat"><small>Saldo</small><b id="kasSaldo">Rp0</b></div></div></div>
+<div class="card no-print"><h3>Tambah Transaksi</h3><div class="form"><label>Tanggal<input type="date" id="txDate"></label><label>Jenis<select id="txType"><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select></label><label>Kategori<input id="txCategory" placeholder="Contoh: Donasi"></label><label>Keterangan<input id="txNote" placeholder="Keterangan"></label><label>Nominal<input type="number" id="txAmount" min="0" placeholder="0"></label></div><div class="actions"><button class="btn primary" onclick="addTx()">+ Simpan</button></div></div>
+<div class="card"><div class="scroll"><table><thead><tr><th>No</th><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th><th>Saldo</th><th class="no-print">Aksi</th></tr></thead><tbody id="cashTable"></tbody></table></div></div>
+</section>
+
+
+<section id="catatan" class="page">
+<div class="card">
+<div class="section"><div><h2>Catatan & Evaluasi</h2><small class="muted">Evaluasi, musyawarah, kendala, keputusan, dan tindak lanjut.</small></div>
+<div class="actions no-print"><button class="btn" onclick="printNotes()">📄 PDF Catatan</button><button class="btn primary" onclick="shareNotes()">📤 Bagikan</button></div></div>
+</div>
+<div class="card no-print"><h3>Tambah Catatan</h3>
+<div class="form">
+<label>Tanggal<input type="date" id="noteDate"></label>
+<label>Kategori<select id="noteCategory"><option>Evaluasi</option><option>Musyawarah</option><option>Kendala</option><option>Tindak Lanjut</option><option>Informasi</option><option>Lainnya</option></select></label>
+<label>Judul<input id="noteTitle" placeholder="Contoh: Evaluasi K3"></label>
+<label style="grid-column:1/-1">Isi Catatan<textarea id="noteBody" rows="4" placeholder="Tulis catatan..."></textarea></label>
+</div>
+<div class="actions"><button class="btn primary" onclick="addNote()">+ Simpan Catatan</button></div></div>
+<div class="card"><div id="notesList"></div></div>
+</section>
+
+<section id="laporan" class="page">
+<div class="card report-head"><div><h2>Laporan Keseluruhan</h2><p class="muted">Iuran K1–K4, keuangan, catatan/evaluasi, dan panitia dalam satu laporan.</p></div>
+<div class="actions no-print"><button class="btn" onclick="printFullReport()">📄 PDF Laporan Lengkap</button><button class="btn primary" onclick="shareFullReport()">📤 Bagikan Laporan</button></div></div>
+<div class="card"><h3>1. Informasi Kegiatan</h3><div class="report-info">
+<div><small>Nama Kegiatan</small><b id="repTitle"></b></div><div><small>Haul</small><b id="repHaul"></b></div>
+<div><small>Maulid</small><b id="repMaulid"></b></div><div><small>Keterangan</small><b id="repInfo"></b></div>
+</div></div>
+<div class="card"><h3>2. Rekap Iuran K1–K4</h3><div class="scroll"><table><thead><tr><th>Kelompok</th><th>Anggota</th><th>Target</th><th>Masuk</th><th>Kekurangan</th><th>Progress</th></tr></thead><tbody id="reportGroups"></tbody><tfoot id="reportGroupsFoot"></tfoot></table></div></div>
+<div class="card"><h3>3. Rekap Keuangan</h3><div class="grid report-stats">
+<div class="stat"><small>Pemasukan Iuran</small><b id="repIuran"></b></div><div class="stat"><small>Pemasukan Lain</small><b id="repOther"></b></div><div class="stat"><small>Total Pemasukan</small><b id="repIncome"></b></div><div class="stat"><small>Pengeluaran</small><b id="repExpense"></b></div><div class="stat"><small>Saldo</small><b id="repBalance"></b></div>
+</div></div>
+<div class="card"><h3>4. Catatan & Evaluasi</h3><div id="reportNotes"></div></div>
+<div class="card"><h3>5. Panitia</h3><div class="scroll"><table><thead><tr><th>No</th><th>Jabatan</th><th>Nama</th><th>Keterangan</th></tr></thead><tbody id="reportCommittee"></tbody></table></div></div>
+<div class="card"><h3>6. Kesimpulan</h3><div id="reportConclusion" class="conclusion"></div></div>
+</section>
+
+
+<section id="panitia" class="page">
+<div class="card no-print"><h2>Panitia</h2><div class="form"><label>Jabatan<input id="role"></label><label>Nama<input id="committeeName"></label><label>Keterangan<input id="committeeNote"></label></div><div class="actions"><button class="btn primary" onclick="addCommittee()">+ Tambah Panitia</button></div></div>
+<div class="card"><div class="scroll"><table><thead><tr><th>No</th><th>Jabatan</th><th>Nama</th><th>Keterangan</th><th class="no-print">Aksi</th></tr></thead><tbody id="committee"></tbody></table></div></div>
+</section>
+
+<section id="pengaturan" class="page">
+<div class="card"><h2>Pengaturan</h2><div class="form"><label>Judul<input id="setTitle"></label><label>Haul<input id="setHaul"></label><label>Maulid<input id="setMaulid"></label><label style="grid-column:1/-1">Keterangan<input id="setInfo"></label></div><div class="actions"><button class="btn primary" onclick="saveSettings()">Simpan</button><button class="btn danger" onclick="resetData()">Reset Data</button></div></div>
+<div class="card"><h3>Kelompok & Target</h3><div class="form no-print"><label>Nama Kelompok<input id="newGroup"></label><label>Target<input type="number" id="newTarget"></label><div style="align-self:end"><button class="btn primary" onclick="addGroup()">+ Tambah</button></div></div><div class="scroll"><table><thead><tr><th>Kelompok</th><th>Target</th><th class="no-print">Aksi</th></tr></thead><tbody id="settingsGroups"></tbody></table></div></div>
+</section>
+</main>
+
+<script>
+const initial={
+settings:{title:"Haul & Maulid Sukamandi 2025",haul:"Haul : Hari Rabu Tggl 10 September",maulid:"Maulid : Hari Rabu Tggl 10 September. Pendidik : Kemasaan Musollah",info:"Iuran di Bagi 4 Kelompok"},
+groups:[
+{name:"K1",target:800000,members:[{name:"Hj Rt Adubah",payments:[800000,0,0]},{name:"H Tb Sya'roni",payments:[300000,200000,300000]}]},
+{name:"K2",target:450000,members:[{name:"H Tb Sya'rowi",payments:[450000,0,0]},{name:"Tb Ma'mun",payments:[450000,0,0]},{name:"Tb Anis",payments:[200000,250000,0]},{name:"H Mukhlisin",payments:[100000,350000,0]},{name:"H Munib",payments:[450000,0,0]}]},
+{name:"K3",target:350000,members:[{name:"Hj Junah",payments:[350000,0,0]},{name:"Hj Rt Um",payments:[350000,0,0]},{name:"Hj Rt Mis",payments:[350000,0,0]},{name:"Hj Rt Ma'unah",payments:[200000,150000,0]},{name:"Hj Rt Ambariyah",payments:[200000,150000,0]},{name:"H Tb Mubarok",payments:[50000,200000,100000]},{name:"Rt Bahjah",payments:[350000,0,0]},{name:"Tb Faidulloh",payments:[150000,100000,0]},{name:"H Fauzan",payments:[200000,0,0]},{name:"Tb Muharror",payments:[200000,0,0]},{name:"Rt Munawwaroh",payments:[300000,0,0]},{name:"Tb Mu'izzuddin",payments:[300000,0,0]},{name:"Tb Hafidz",payments:[350000,0,0]},{name:"Imron",payments:[350000,0,0]},{name:"Miswar",payments:[350000,0,0]},{name:"Abdulloh",payments:[350000,0,0]},{name:"Faidurrohman",payments:[200000,0,0]},{name:"Su'di",payments:[300000,0,0]},{name:"H Mumus",payments:[350000,0,0]},{name:"Nasih",payments:[0,0,0]}]},
+{name:"K4",target:150000,members:[]}],
+manualIncome:[],expenses:[],committee:[],notes:[]
+};
+let data=JSON.parse(localStorage.getItem("buludanData")||"null")||structuredClone(initial); data.notes=data.notes||[];
+function migrateData(){
+  if(!data || typeof data!=="object") data=structuredClone(initial);
+  data.settings=Object.assign(structuredClone(initial.settings),data.settings||{});
+  if(!Array.isArray(data.groups)) data.groups=structuredClone(initial.groups);
+  if(!Array.isArray(data.manualIncome)) data.manualIncome=[];
+  if(!Array.isArray(data.expenses)) data.expenses=[];
+  if(!Array.isArray(data.committee)) data.committee=[];
+  data.groups.forEach(g=>{
+    if(!g || typeof g!=="object") return;
+    g.name=String(g.name??"");
+    g.target=Number(g.target||0);
+    if(!Array.isArray(g.members)) g.members=[];
+    g.members.forEach(m=>{
+      if(!m || typeof m!=="object") return;
+      m.name=String(m.name??"");
+      m.payments=Array.isArray(m.payments)?m.payments:[];
+    });
+  });
+}
+migrateData();
+const rp=n=>"Rp"+Number(n||0).toLocaleString("id-ID");
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function save(){localStorage.setItem("buludanData",JSON.stringify(data))}
+function incomeIuran(){return data.groups.reduce((a,g)=>a+g.members.reduce((b,m)=>b+m.payments.reduce((x,p)=>x+Number(p.amount??p??0),0),0),0)}
+function incomeOther(){return data.manualIncome.reduce((a,x)=>a+Number(x.amount||0),0)}
+function expense(){return data.expenses.reduce((a,x)=>a+Number(x.amount||0),0)}
+function totalIncome(){return incomeIuran()+incomeOther()}
+function fmtDate(d){return d?d.split("-").reverse().join("/"):"-"}
+function normalize(){data.groups.forEach(g=>g.members.forEach(m=>{m.payments=(m.payments||[]).slice(0,3).map(p=>typeof p==="object"?{amount:Number(p.amount||0),date:p.date||""}:{amount:Number(p||0),date:""});while(m.payments.length<3)m.payments.push({amount:0,date:""})}))}
+function render(){
+normalize();save();
+document.getElementById("title").textContent=data.settings.title;
+document.getElementById("dashTitle").textContent=data.settings.title;
+document.getElementById("dashInfo").textContent=data.settings.haul+" · "+data.settings.maulid;
+let inc=totalIncome(),out=expense(),bal=inc-out;
+document.getElementById("totalIncome").textContent=rp(inc);
+document.getElementById("totalExpense").textContent=rp(out);
+document.getElementById("balance").textContent=rp(bal);
+let target=data.groups.reduce((a,g)=>a+g.target*g.members.length,0);
+document.getElementById("progress").textContent=(target?incomeIuran()/target*100:0).toFixed(1)+"%";
+const groupRows=data.groups.map(g=>{const paid=g.members.reduce((a,m)=>a+m.payments.reduce((x,p)=>x+p.amount,0),0);const targetGroup=g.target*g.members.length;const pct=targetGroup?Math.min(100,paid/targetGroup*100):0;return {g,paid,targetGroup,pct,remaining:Math.max(0,targetGroup-paid)}});document.getElementById("summary").innerHTML=groupRows.map(x=>`<tr><td><b>${esc(x.g.name)}</b></td><td>${rp(x.g.target)}</td><td>${x.g.members.length}</td><td>${rp(x.targetGroup)}</td><td>${rp(x.paid)}</td><td>${rp(x.remaining)}</td><td><div class="progress-wrap"><div class="progress-bar"><span style="width:${x.pct}%"></span></div><b>${x.pct.toFixed(1)}%</b></div></td></tr>`).join("")||'<tr><td colspan="7" class="empty">Belum ada kelompok</td></tr>';document.getElementById("overallCards").innerHTML=groupRows.map(x=>`<div class="group-mini"><div class="group-mini-head"><b>${esc(x.g.name)}</b><span>${x.g.members.length} anggota</span></div><strong>${rp(x.paid)}</strong><small>dari ${rp(x.targetGroup)}</small><div class="progress-bar"><span style="width:${x.pct}%"></span></div><div class="group-mini-foot"><span>${x.pct.toFixed(1)}%</span><span>${x.remaining?`Kurang ${rp(x.remaining)}`:"LUNAS"}</span></div></div>`).join("");
+document.getElementById("memberGroup").innerHTML=data.groups.map(g=>`<option>${esc(g.name)}</option>`).join("");
+renderGroups();renderCash();renderCommittee();renderSettings();renderNotes();renderReport();
+document.getElementById("rIncome").textContent=rp(inc);document.getElementById("rExpense").textContent=rp(out);document.getElementById("rBalance").textContent=rp(bal);
+}
+function renderGroups(){
+document.getElementById("groups").innerHTML=data.groups.map((g,gi)=>`<div class="card"><div class="section"><h3>${esc(g.name)} <small>Target ${rp(g.target)}/orang</small></h3><div class="actions no-print"><button class="btn" onclick="printGroup(${gi})">📄 PDF</button><button class="btn primary" onclick="shareGroup(${gi})">📤 Bagikan</button></div></div><div class="scroll"><table><thead><tr><th>No</th><th>Nama</th><th>Pemasukan 1</th><th>Pemasukan 2</th><th>Pemasukan 3</th><th>Jumlah</th><th>Sisa</th><th>Status</th><th class="no-print">Aksi</th></tr></thead><tbody>${g.members.map((m,mi)=>{let total=m.payments.reduce((a,p)=>a+p.amount,0);return `<tr><td>${mi+1}</td><td class="name"><input value="${esc(m.name)}" onchange="rename(${gi},${mi},this.value)"></td>${m.payments.map((p,pi)=>`<td class="pay"><input type="number" min="0" value="${p.amount||""}" onchange="setPay(${gi},${mi},${pi},this.value)"><span class="date">Tanggal: ${fmtDate(p.date)}</span></td>`).join("")}<td>${rp(total)}</td><td class="${total>=g.target?'ok':'warn'}">${total>=g.target?'Rp0':rp(g.target-total)}</td><td class="status ${total>=g.target?'ok':'warn'}">${total>=g.target?'LUNAS':'BELUM LUNAS'}</td><td class="no-print"><button class="btn danger" onclick="delMember(${gi},${mi})">Hapus</button></td></tr>`}).join("")||'<tr><td colspan="9" class="empty">Belum ada anggota</td></tr>'}</tbody></table></div></div>`).join("");
+}
+function setPay(gi,mi,pi,v){let p=data.groups[gi].members[mi].payments[pi],n=Number(v||0);p.amount=n;p.date=n?(p.date||today()):"";save();render()}
+function rename(gi,mi,v){data.groups[gi].members[mi].name=v.trim();save()}
+function addMember(){let g=data.groups.find(x=>x.name===document.getElementById("memberGroup").value),n=document.getElementById("memberName").value.trim();if(!n)return alert("Nama belum diisi");g.members.push({name:n,payments:[0,0,0]});document.getElementById("memberName").value="";save();render()}
+function delMember(gi,mi){if(confirm("Hapus anggota ini?")){data.groups[gi].members.splice(mi,1);save();render()}}
+function renderCash(){
+document.getElementById("kasIuran").textContent=rp(incomeIuran());document.getElementById("kasOther").textContent=rp(incomeOther());document.getElementById("kasOut").textContent=rp(expense());document.getElementById("kasSaldo").textContent=rp(totalIncome()-expense());
+let rows=[];data.groups.forEach(g=>g.members.forEach(m=>m.payments.forEach((p,i)=>p.amount&&rows.push({date:p.date,type:"income",cat:"Iuran "+g.name,note:m.name+" · Pemasukan "+(i+1),amount:p.amount,auto:true}))));data.manualIncome.forEach((x,i)=>rows.push({...x,type:"income",auto:false,index:i}));data.expenses.forEach((x,i)=>rows.push({...x,type:"expense",auto:false,index:i}));rows.sort((a,b)=>(a.date||"").localeCompare(b.date||""));let run=0;
+document.getElementById("cashTable").innerHTML=rows.map((x,i)=>{run+=x.type==="income"?x.amount:-x.amount;return `<tr><td>${i+1}</td><td>${fmtDate(x.date)}</td><td>${x.type==="income"?"Pemasukan":"Pengeluaran"}</td><td>${esc(x.cat||x.category)}</td><td class="name">${esc(x.note)}</td><td>${x.type==="income"?"+":"-"}${rp(x.amount)}</td><td>${rp(run)}</td><td class="no-print">${x.auto?"<span class='badge'>OTOMATIS</span>":`<button class="btn danger" onclick="delTx('${x.type}',${x.index})">Hapus</button>`}</td></tr>`}).join("")||'<tr><td colspan="8" class="empty">Belum ada transaksi</td></tr>';
+}
+function addTx(){let x={date:document.getElementById("txDate").value||today(),category:document.getElementById("txCategory").value.trim(),note:document.getElementById("txNote").value.trim(),amount:Number(document.getElementById("txAmount").value||0)};if(!x.category||!x.note||x.amount<=0)return alert("Lengkapi data transaksi");(document.getElementById("txType").value==="income"?data.manualIncome:data.expenses).push(x);["txCategory","txNote","txAmount"].forEach(id=>document.getElementById(id).value="");save();render()}
+function delTx(type,i){if(confirm("Hapus transaksi?")){(type==="income"?data.manualIncome:data.expenses).splice(i,1);save();render()}}
+function renderCommittee(){document.getElementById("committee").innerHTML=data.committee.map((x,i)=>`<tr><td>${i+1}</td><td><input value="${esc(x.role)}" onchange="data.committee[${i}].role=this.value;save()"></td><td><input value="${esc(x.name)}" onchange="data.committee[${i}].name=this.value;save()"></td><td><input value="${esc(x.note)}" onchange="data.committee[${i}].note=this.value;save()"></td><td class="no-print"><button class="btn danger" onclick="data.committee.splice(${i},1);save();render()">Hapus</button></td></tr>`).join("")||'<tr><td colspan="5" class="empty">Belum ada panitia</td></tr>'}
+function addCommittee(){let role=document.getElementById("role").value.trim(),name=document.getElementById("committeeName").value.trim(),note=document.getElementById("committeeNote").value.trim();if(!role||!name)return alert("Jabatan dan nama wajib diisi");data.committee.push({role,name,note});["role","committeeName","committeeNote"].forEach(id=>document.getElementById(id).value="");save();render()}
+
+function renderNotes(){
+ const box=document.getElementById("notesList"); if(!box)return;
+ const notes=[...data.notes].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ box.innerHTML=notes.length?notes.map(n=>`<div class="note-card"><div class="note-top"><span class="badge">${esc(n.category)}</span><span>${fmtDate(n.date)}</span></div><h3>${esc(n.title)}</h3><p>${esc(n.body).replace(/\n/g,"<br>")}</p><div class="actions no-print"><button class="btn danger" onclick="deleteNote(${data.notes.indexOf(n)})">Hapus</button></div></div>`).join(""):'<div class="empty">Belum ada catatan.</div>';
+}
+function addNote(){
+ const title=document.getElementById("noteTitle").value.trim(),body=document.getElementById("noteBody").value.trim();
+ if(!title||!body)return alert("Judul dan isi catatan wajib diisi.");
+ data.notes.push({date:document.getElementById("noteDate").value||today(),category:document.getElementById("noteCategory").value,title,body});
+ document.getElementById("noteTitle").value="";document.getElementById("noteBody").value="";save();render();
+}
+function deleteNote(i){if(confirm("Hapus catatan ini?")){data.notes.splice(i,1);save();render()}}
+function makeNotesText(){let s=`${data.settings.title}\nCATATAN & EVALUASI\n\n`;data.notes.forEach((n,i)=>s+=`${i+1}. ${fmtDate(n.date)} · ${n.category}\n${n.title}\n${n.body}\n\n`);return s}
+function shareNotes(){shareText(makeNotesText())}
+function printNotes(){const w=window.open("","_blank");if(!w)return alert("Izinkan popup untuk mencetak PDF.");w.document.write(`<html><head><title>Catatan</title><style>body{font-family:Arial;padding:25px}.note{border:1px solid #ccc;padding:12px;margin:10px 0}
+.hero-title{font-size:clamp(20px,5vw,30px);font-weight:850;line-height:1.12;max-width:560px;overflow-wrap:anywhere}
+.hero-info{margin-top:8px;line-height:1.45;opacity:.88;max-width:650px}.muted{color:var(--muted);font-size:12px}
+textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;font-family:inherit;resize:vertical}
+.report-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.report-info{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.report-info>div{border:1px solid var(--line);border-radius:10px;padding:10px}.report-info small{display:block;color:var(--muted);margin-bottom:4px}
+.report-stats{grid-template-columns:repeat(5,1fr)}.note-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fbfdfc}
+.note-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.note-card h3{margin:8px 0 5px}.note-card p{line-height:1.55}
+.note-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}.conclusion{background:#f0f7f3;border-left:4px solid var(--g);padding:13px;line-height:1.6;border-radius:8px}
+@media(max-width:900px){.report-head{align-items:flex-start;flex-direction:column}.report-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-info{grid-template-columns:1fr}.report-stats{grid-template-columns:1fr}.hero-title{font-size:21px}}
+</style></head><body><h1>${esc(data.settings.title)}</h1><h2>Catatan & Evaluasi</h2>${data.notes.map(n=>`<div class="note"><b>${fmtDate(n.date)} · ${esc(n.category)} — ${esc(n.title)}</b><p>${esc(n.body).replace(/\n/g,"<br>")}</p></div>`).join("")||"<p>Belum ada catatan.</p>"}</body></html>`);w.document.close();setTimeout(()=>w.print(),200)}
+function reportGroupData(){return data.groups.map(g=>{const target=g.target*g.members.length,paid=g.members.reduce((a,m)=>a+m.payments.reduce((x,p)=>x+p.amount,0),0);return{g,target,paid,remaining:Math.max(0,target-paid),pct:target?Math.min(100,paid/target*100):0}})}
+function renderReport(){
+ const e=id=>document.getElementById(id); if(e("repTitle"))e("repTitle").textContent=data.settings.title;
+ if(e("repHaul"))e("repHaul").textContent=data.settings.haul;if(e("repMaulid"))e("repMaulid").textContent=data.settings.maulid;if(e("repInfo"))e("repInfo").textContent=data.settings.info;
+ const gs=reportGroupData(),target=gs.reduce((a,x)=>a+x.target,0),paid=gs.reduce((a,x)=>a+x.paid,0);
+ if(e("reportGroups"))e("reportGroups").innerHTML=gs.map(x=>`<tr><td><b>${esc(x.g.name)}</b></td><td>${x.g.members.length}</td><td>${rp(x.target)}</td><td>${rp(x.paid)}</td><td>${rp(x.remaining)}</td><td>${x.pct.toFixed(1)}%</td></tr>`).join("");
+ if(e("reportGroupsFoot"))e("reportGroupsFoot").innerHTML=`<tr><th colspan="2">TOTAL</th><th>${rp(target)}</th><th>${rp(paid)}</th><th>${rp(Math.max(0,target-paid))}</th><th>${target?(paid/target*100).toFixed(1):"0"}%</th></tr>`;
+ [["repIuran",incomeIuran()],["repOther",incomeOther()],["repIncome",totalIncome()],["repExpense",expense()],["repBalance",totalIncome()-expense()]].forEach(([id,v])=>{if(e(id))e(id).textContent=rp(v)});
+ if(e("reportNotes"))e("reportNotes").innerHTML=data.notes.length?data.notes.map(n=>`<div class="note-line"><b>${fmtDate(n.date)} · ${esc(n.category)} — ${esc(n.title)}</b><div>${esc(n.body).replace(/\n/g,"<br>")}</div></div>`).join(""):'<div class="empty">Belum ada catatan.</div>';
+ if(e("reportCommittee"))e("reportCommittee").innerHTML=data.committee.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.role)}</td><td>${esc(x.name)}</td><td>${esc(x.note)}</td></tr>`).join("")||'<tr><td colspan="4" class="empty">Belum ada data panitia.</td></tr>';
+ if(e("reportConclusion"))e("reportConclusion").innerHTML=`Target iuran K1–K4 <b>${rp(target)}</b>, terkumpul <b>${rp(paid)}</b>, kekurangan <b>${rp(Math.max(0,target-paid))}</b>, progress <b>${target?(paid/target*100).toFixed(1):"0"}%</b>, saldo kas <b>${rp(totalIncome()-expense())}</b>.`;
+}
+function makeFullReportText(){let gs=reportGroupData(),target=gs.reduce((a,x)=>a+x.target,0),paid=gs.reduce((a,x)=>a+x.paid,0);let s=`${data.settings.title}\nLAPORAN KESELURUHAN\n\n${data.settings.haul}\n${data.settings.maulid}\n\nREKAP IURAN K1-K4\n`;gs.forEach(x=>s+=`${x.g.name}: ${x.g.members.length} anggota | Target ${rp(x.target)} | Masuk ${rp(x.paid)} | Kurang ${rp(x.remaining)} | ${x.pct.toFixed(1)}%\n`);s+=`\nTOTAL TARGET: ${rp(target)}\nTOTAL MASUK: ${rp(paid)}\nTOTAL KEKURANGAN: ${rp(Math.max(0,target-paid))}\n\nKEUANGAN\nIuran: ${rp(incomeIuran())}\nPemasukan lain: ${rp(incomeOther())}\nPengeluaran: ${rp(expense())}\nSaldo: ${rp(totalIncome()-expense())}\n\n${makeNotesText()}\nPANITIA\n`;data.committee.forEach((x,i)=>s+=`${i+1}. ${x.role} — ${x.name}${x.note?` — ${x.note}`:""}\n`);return s}
+function shareFullReport(){shareText(makeFullReportText())}
+function printFullReport(){const w=window.open("","_blank");if(!w)return alert("Izinkan popup untuk mencetak PDF.");const gs=reportGroupData(),target=gs.reduce((a,x)=>a+x.target,0),paid=gs.reduce((a,x)=>a+x.paid,0);let groups=gs.map(x=>`<h3>${esc(x.g.name)}</h3><table><tr><th>No</th><th>Nama</th><th>Masuk 1</th><th>Masuk 2</th><th>Masuk 3</th><th>Total</th><th>Sisa</th><th>Status</th></tr>${x.g.members.map((m,i)=>{let t=m.payments.reduce((a,p)=>a+p.amount,0);return`<tr><td>${i+1}</td><td>${esc(m.name)}</td>${m.payments.map(p=>`<td>${rp(p.amount)}<br><small>${fmtDate(p.date)}</small></td>`).join("")}<td>${rp(t)}</td><td>${rp(Math.max(0,x.g.target-t))}</td><td>${t>=x.g.target?"LUNAS":"BELUM"}</td></tr>`}).join("")}</table>`).join("");let notes=data.notes.map(n=>`<div class="note"><b>${fmtDate(n.date)} · ${esc(n.category)} — ${esc(n.title)}</b><p>${esc(n.body).replace(/\n/g,"<br>")}</p></div>`).join("")||"<p>Belum ada catatan.</p>";let comm=data.committee.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.role)}</td><td>${esc(x.name)}</td><td>${esc(x.note)}</td></tr>`).join("")||"<tr><td colspan='4'>Belum ada data panitia.</td></tr>";w.document.write(`<html><head><title>Laporan Keseluruhan</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial;font-size:10px}table{width:100%;border-collapse:collapse;margin-bottom:12px}th,td{border:1px solid #ccc;padding:5px;text-align:center}th{background:#eef4f0}.note{border:1px solid #ddd;padding:8px;margin:6px 0}h1{text-align:center}h2{border-bottom:2px solid #0f6b4f}
+.hero-title{font-size:clamp(20px,5vw,30px);font-weight:850;line-height:1.12;max-width:560px;overflow-wrap:anywhere}
+.hero-info{margin-top:8px;line-height:1.45;opacity:.88;max-width:650px}.muted{color:var(--muted);font-size:12px}
+textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;font-family:inherit;resize:vertical}
+.report-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.report-info{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.report-info>div{border:1px solid var(--line);border-radius:10px;padding:10px}.report-info small{display:block;color:var(--muted);margin-bottom:4px}
+.report-stats{grid-template-columns:repeat(5,1fr)}.note-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fbfdfc}
+.note-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.note-card h3{margin:8px 0 5px}.note-card p{line-height:1.55}
+.note-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}.conclusion{background:#f0f7f3;border-left:4px solid var(--g);padding:13px;line-height:1.6;border-radius:8px}
+@media(max-width:900px){.report-head{align-items:flex-start;flex-direction:column}.report-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-info{grid-template-columns:1fr}.report-stats{grid-template-columns:1fr}.hero-title{font-size:21px}}
+</style></head><body><h1>${esc(data.settings.title)}</h1><p>${esc(data.settings.haul)} · ${esc(data.settings.maulid)}</p><h2>1. Informasi Kegiatan</h2><p>${esc(data.settings.info)}</p><h2>2. Rekap Iuran K1–K4</h2>${groups}<p><b>Total Target:</b> ${rp(target)} &nbsp; <b>Total Masuk:</b> ${rp(paid)} &nbsp; <b>Kekurangan:</b> ${rp(Math.max(0,target-paid))}</p><h2>3. Rekap Keuangan</h2><table><tr><th>Iuran</th><th>Pemasukan Lain</th><th>Total Pemasukan</th><th>Pengeluaran</th><th>Saldo</th></tr><tr><td>${rp(incomeIuran())}</td><td>${rp(incomeOther())}</td><td>${rp(totalIncome())}</td><td>${rp(expense())}</td><td>${rp(totalIncome()-expense())}</td></tr></table><h2>4. Catatan & Evaluasi</h2>${notes}<h2>5. Panitia</h2><table><tr><th>No</th><th>Jabatan</th><th>Nama</th><th>Keterangan</th></tr>${comm}</table><h2>6. Kesimpulan</h2><p>Progress iuran ${(target?(paid/target*100):0).toFixed(1)}% dan saldo kas ${rp(totalIncome()-expense())}.</p></body></html>`);w.document.close();setTimeout(()=>w.print(),250)}
+function renderSettings(){document.getElementById("setTitle").value=data.settings.title;document.getElementById("setHaul").value=data.settings.haul;document.getElementById("setMaulid").value=data.settings.maulid;document.getElementById("setInfo").value=data.settings.info;document.getElementById("settingsGroups").innerHTML=data.groups.map((g,i)=>`<tr><td><input value="${esc(g.name)}" onchange="data.groups[${i}].name=this.value.trim();save();render()"></td><td><input type="number" value="${g.target}" onchange="data.groups[${i}].target=Number(this.value);save();render()"></td><td class="no-print"><button class="btn danger" onclick="if(confirm('Hapus kelompok?')){data.groups.splice(${i},1);save();render()}">Hapus</button></td></tr>`).join("")}
+function saveSettings(){data.settings.title=document.getElementById("setTitle").value;data.settings.haul=document.getElementById("setHaul").value;data.settings.maulid=document.getElementById("setMaulid").value;data.settings.info=document.getElementById("setInfo").value;save();render();alert("Pengaturan tersimpan")}
+function addGroup(){let name=document.getElementById("newGroup").value.trim(),target=Number(document.getElementById("newTarget").value||0);if(!name)return alert("Nama kelompok belum diisi");if(data.groups.some(g=>g.name.toLowerCase()===name.toLowerCase()))return alert("Kelompok sudah ada");data.groups.push({name,target,members:[]});document.getElementById("newGroup").value="";document.getElementById("newTarget").value="";save();render()}
+function resetData(){if(confirm("Kembalikan ke data awal?")){data=structuredClone(initial);save();render()}}
+function makeDashboardText(){return `${data.settings.title}\nPemasukan: ${rp(totalIncome())}\nPengeluaran: ${rp(expense())}\nSaldo: ${rp(totalIncome()-expense())}`}
+async function shareText(text){if(navigator.share){try{await navigator.share({title:data.settings.title,text});return}catch(e){}}try{await navigator.clipboard.writeText(text);alert("Ringkasan disalin. Silakan tempel ke WhatsApp.")}catch(e){alert(text)}}
+function shareGroup(i){let g=data.groups[i],s=`REKAP IURAN ${g.name}\nTarget/orang: ${rp(g.target)}\n\n`;g.members.forEach((m,n)=>{let t=m.payments.reduce((a,p)=>a+p.amount,0);s+=`${n+1}. ${m.name} — ${rp(t)} — ${t>=g.target?"LUNAS":"BELUM LUNAS"}\n`});shareText(s)}
+function makeAllGroupsText(){let s=`${data.settings.title}\nREKAP KESELURUHAN IURAN K1–K4\n\n`;let grandTarget=0,grandPaid=0;data.groups.forEach(g=>{const targetGroup=g.target*g.members.length;const paid=g.members.reduce((a,m)=>a+m.payments.reduce((x,p)=>x+p.amount,0),0);grandTarget+=targetGroup;grandPaid+=paid;s+=`${g.name} — ${g.members.length} anggota — Target ${rp(targetGroup)} — Masuk ${rp(paid)} — Kurang ${rp(Math.max(0,targetGroup-paid))}\n`;g.members.forEach((m,n)=>{const t=m.payments.reduce((a,p)=>a+p.amount,0);s+=`  ${n+1}. ${m.name}: ${rp(t)} — ${t>=g.target?"LUNAS":"BELUM LUNAS"}\n`});s+='\n'});s+=`TOTAL KESELURUHAN: Target ${rp(grandTarget)} — Masuk ${rp(grandPaid)} — Kurang ${rp(Math.max(0,grandTarget-grandPaid))}`;return s}function shareAllGroups(){shareText(makeAllGroupsText())}function printAllGroups(){const w=window.open("","_blank");if(!w){alert("Izinkan popup untuk mencetak PDF.");return}let grandTarget=0,grandPaid=0;const sections=data.groups.map(g=>{const targetGroup=g.target*g.members.length;const paid=g.members.reduce((a,m)=>a+m.payments.reduce((x,p)=>x+p.amount,0),0);grandTarget+=targetGroup;grandPaid+=paid;return `<section class="group-page"><div class="group-title"><h2>${esc(g.name)}</h2><div>Target/orang: ${rp(g.target)} · ${g.members.length} anggota</div></div><table><tr><th>No</th><th>Nama</th><th>Pemasukan 1</th><th>Pemasukan 2</th><th>Pemasukan 3</th><th>Total</th><th>Sisa</th><th>Status</th></tr>${g.members.map((m,n)=>{const t=m.payments.reduce((a,p)=>a+p.amount,0);return `<tr><td>${n+1}</td><td class="left">${esc(m.name)}</td>${m.payments.map(p=>`<td>${rp(p.amount)}<br><small>${fmtDate(p.date)}</small></td>`).join("")}<td>${rp(t)}</td><td>${rp(Math.max(0,g.target-t))}</td><td>${t>=g.target?"LUNAS":"BELUM LUNAS"}</td></tr>`}).join("")}<tr class="total-row"><td colspan="5">TOTAL ${esc(g.name)}</td><td>${rp(paid)}</td><td>${rp(Math.max(0,targetGroup-paid))}</td><td>${paid>=targetGroup?"LUNAS":"BELUM"}</td></tr></table></section>`}).join("");w.document.write(`<html><head><title>Rekap Keseluruhan K1-K4</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;color:#18231e;font-size:10px}h1{text-align:center;margin:0 0 4px;font-size:19px}.sub{text-align:center;color:#66736c;margin-bottom:14px}.overall{display:flex;justify-content:space-between;border:1px solid #ccc;padding:9px;margin-bottom:14px}.group-page{margin-bottom:20px;page-break-inside:avoid}.group-title{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0f6b4f;padding-bottom:5px;margin-bottom:7px}h2{margin:0;font-size:14px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:5px;text-align:center}th{background:#eef4f0}.left{text-align:left}.total-row{font-weight:bold;background:#f5f7f6}
+.hero-title{font-size:clamp(20px,5vw,30px);font-weight:850;line-height:1.12;max-width:560px;overflow-wrap:anywhere}
+.hero-info{margin-top:8px;line-height:1.45;opacity:.88;max-width:650px}.muted{color:var(--muted);font-size:12px}
+textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;font-family:inherit;resize:vertical}
+.report-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.report-info{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.report-info>div{border:1px solid var(--line);border-radius:10px;padding:10px}.report-info small{display:block;color:var(--muted);margin-bottom:4px}
+.report-stats{grid-template-columns:repeat(5,1fr)}.note-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fbfdfc}
+.note-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.note-card h3{margin:8px 0 5px}.note-card p{line-height:1.55}
+.note-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}.conclusion{background:#f0f7f3;border-left:4px solid var(--g);padding:13px;line-height:1.6;border-radius:8px}
+@media(max-width:900px){.report-head{align-items:flex-start;flex-direction:column}.report-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-info{grid-template-columns:1fr}.report-stats{grid-template-columns:1fr}.hero-title{font-size:21px}}
+</style></head><body><h1>${esc(data.settings.title)}</h1><div class="sub">REKAP KESELURUHAN IURAN K1–K4 · ${esc(data.settings.haul)}</div><div class="overall"><b>Total Target: ${rp(grandTarget)}</b><b>Total Masuk: ${rp(grandPaid)}</b><b>Total Kekurangan: ${rp(Math.max(0,grandTarget-grandPaid))}</b><b>Progress: ${grandTarget?(grandPaid/grandTarget*100).toFixed(1):"0"}%</b></div>${sections}</body></html>`);w.document.close();setTimeout(()=>w.print(),250)}
+function printGroup(i){let g=data.groups[i],w=window.open("","_blank");if(!w)return alert("Izinkan popup untuk mencetak PDF.");w.document.write(`<html><head><title>${esc(g.name)}</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:7px;text-align:center}h1{text-align:center}
+.hero-title{font-size:clamp(20px,5vw,30px);font-weight:850;line-height:1.12;max-width:560px;overflow-wrap:anywhere}
+.hero-info{margin-top:8px;line-height:1.45;opacity:.88;max-width:650px}.muted{color:var(--muted);font-size:12px}
+textarea{width:100%;margin-top:5px;padding:9px;border:1px solid #ccd7d1;border-radius:8px;font-family:inherit;resize:vertical}
+.report-head{display:flex;justify-content:space-between;gap:15px;align-items:center}.report-info{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.report-info>div{border:1px solid var(--line);border-radius:10px;padding:10px}.report-info small{display:block;color:var(--muted);margin-bottom:4px}
+.report-stats{grid-template-columns:repeat(5,1fr)}.note-card{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px;background:#fbfdfc}
+.note-top{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.note-card h3{margin:8px 0 5px}.note-card p{line-height:1.55}
+.note-line{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.5}.conclusion{background:#f0f7f3;border-left:4px solid var(--g);padding:13px;line-height:1.6;border-radius:8px}
+@media(max-width:900px){.report-head{align-items:flex-start;flex-direction:column}.report-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.report-info{grid-template-columns:1fr}.report-stats{grid-template-columns:1fr}.hero-title{font-size:21px}}
+</style></head><body><h1>${esc(data.settings.title)}</h1><p style="text-align:center">Rekap ${esc(g.name)} · Target ${rp(g.target)}/orang</p><table><tr><th>No</th><th>Nama</th><th>Masuk 1</th><th>Masuk 2</th><th>Masuk 3</th><th>Total</th><th>Status</th></tr>${g.members.map((m,n)=>{let t=m.payments.reduce((a,p)=>a+p.amount,0);return `<tr><td>${n+1}</td><td style="text-align:left">${esc(m.name)}</td>${m.payments.map(p=>`<td>${rp(p.amount)}</td>`).join("")}<td>${rp(t)}</td><td>${t>=g.target?"LUNAS":"BELUM LUNAS"}</td></tr>`}).join("")}</table></body></html>`);w.document.close();setTimeout(()=>w.print(),200)}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.page).classList.add("active");render()});
+document.getElementById("txDate").value=today();if(document.getElementById("noteDate"))document.getElementById("noteDate").value=today();render();
+</script>
+</body>
+</html>
